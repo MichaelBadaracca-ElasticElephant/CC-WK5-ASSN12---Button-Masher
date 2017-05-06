@@ -13,13 +13,18 @@
     </script>
 </head>
 <body>
+    <!-- Button masher controls -->
     <div align="center" class="controls">
         <span id="points"></span>
+        <!-- add a smasher by clicking on the hammer image -->
         <img id="buy-masher" src="smasher.png" height="200px">
         <span id="mashers"></span>
     </div>
+    <!--the safe zone is easy to click and gives a few easy points on each click -->
     <div align="center" id="safe-zone" class="click-zone">
+        <!-- the danger zone surrounds the sweet spot and subtracts substantial points on each click -->
         <div id="danger-zone" class="click-zone">
+            <!-- the sweet spot is very small and hard to click but gives a lot of points -->
             <div id="sweet-spot" class="click-zone">
             </div>
         </div>
@@ -29,34 +34,38 @@
         var mashers = 0;
 
         function showPoints(){
+            //display the number of points and mashers in the html
             $('#points').text(points);
             $('#mashers').text(mashers);
         }
 
         function runMashers(){
+            //increment points by the number of mashers and update screen with points
             points += mashers;
             showPoints();
         }
 
         function get_random_color() {
                 function c() {
+                    //gets a random number between 0 and 256, representing an RGB number and converts it to a base 16 string
+                    //which corresponds to a hexidecimal color value 
                     var hex = Math.floor(Math.random()*256).toString(16);
+                    //pad with a zero and grab the last two elements - this accounts for if the random number is just one digit
                     return ("0"+String(hex)).substr(-2); // pad with zero
                 }
+                // generate three radom haex number each consisting of two places. prepend a #symbol to produce a hex color code that can be used for css
                 return "#"+c()+c()+c();
         }
 
         $(document).ready(function(){
-            $('#clickme').click(function(){
-                points++;
-                showPoints();
-            })
-
+            //when the safe zone is clicked add 1 point, update display and make the backgound a change to a random color
             $('#safe-zone').click(function(){
                 points++;
                 showPoints();
+                //set body to a random color
                 $('body').css('background-color', get_random_color());
 
+                //in the rare event that the randomly generated background color matches the safe-zone color, make something special happen
                 var bodyColor = $('body').css('background-color');
                 var zoneColor = $(this).css('background-color');
                 if(bodyColor === zoneColor){
@@ -65,13 +74,16 @@
             })
 
             $('#danger-zone').click(function(){
+                //subtract 500 points when the danger zone is clicked and show a funny warning image
                 points -= 500;
                 showPoints();
 
+                //create an image tag and prepend it to the document when danger zone is clicked
                 var image = $('<img src="http://facts.be/app/uploads/image2.jpg">');
                 image.css({position: "absolute"})
                 $('body').prepend(image);
                 
+                //animage the image to bounce around the screen and fade away
                 image.animate({top: 400, left: 600}, 100);
                 image.animate({top: 0, left: 1200}, 100);
                 image.animate({top: 400, left: 600}, 100);
@@ -80,16 +92,19 @@
             })
 
             $('#sweet-spot').click(function(){
+                //clicking the sweet spot gives 1000 points
                 points += 1000;
                 showPoints();
             })
 
             $('#buy-masher').click(function(){
+                // you can buy a masher for 10 points which adds to your masher count
                 points -= 10;
                 mashers++;
                 showPoints();
             });
 
+            //every second increate the points by the number of mashers
             setInterval(runMashers, 1000);
         })
     </script>
